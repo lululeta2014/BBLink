@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BBLink</string>
+    <string name="header">写真を決めよう</string>
+    <string name="load_image">写真を読み込む</string>
+    <string name="set_service">セット</string>
+    <string name="unset_service">アンセット</string>
 </resources>

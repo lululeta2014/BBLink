@@ -5,9 +5,28 @@
               android:layout_height="fill_parent"
         >
     <TextView
+            android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World, MainActivity"
+            android:text="@string/header"
             />
+    <Button
+            android:id="@+id/loadImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:text="@string/load_image" />
+    <Button
+            android:id="@+id/setServiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:text="@string/set_service" />
+    <Button
+            android:id="@+id/unsetServiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:text="@string/unset_service" />
 </LinearLayout>
 
