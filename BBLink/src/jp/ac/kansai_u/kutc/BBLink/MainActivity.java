@@ -8,10 +8,11 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * アプリケーションのスタートとなるアクティビティ
@@ -107,24 +108,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         PopupWindow popupWindow = createPopupWindow();
+        // ポップウィンドウのタイトル
         TextView popupTitle = (TextView)popupWindow.getContentView().findViewById(R.id.popup_title);
+        // ポップウィンドウの中身
         TextView popupBody = (TextView)popupWindow.getContentView().findViewById(R.id.popup_body);
         switch(item.getItemId()){
             case R.id.menu_info:
-                // Whant's app
-                popupTitle.setText("このアプリについて");
-                popupBody.setText("What's app");
-                popupWindow.showAtLocation(this.findViewById(R.id.menu_info), Gravity.CENTER, 0, 0);
+                // Selected "Whant's app"
+                popupTitle.setText(R.string.menu_info);
+                popupBody.setText(extractStringFromTextFile(R.raw.whatsapp));
                 break;
             case R.id.menu_help:
-                // Help
-                popupTitle.setText("ヘルプ");
-                popupBody.setText("HELP");
-                popupWindow.showAtLocation(this.findViewById(R.id.menu_info), Gravity.CENTER, 0, 0);
+                // Selected "Help"
+                popupTitle.setText(R.string.menu_help);
+                popupBody.setText(extractStringFromTextFile(R.raw.help));
                 break;
             default:
                 break;
         }
+        // ポップウィンドウの表示
+        popupWindow.showAtLocation(this.findViewById(R.id.menu_info), Gravity.CENTER, 0, 0);
         return super.onOptionsItemSelected(item);
     }
 
@@ -151,5 +154,32 @@ public class MainActivity extends Activity implements View.OnClickListener{
         pw.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         pw.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         return pw;
+    }
+
+    /**
+     * テキストファイルから文字列を抽出する
+     * @param id テキストファイルのID
+     * @return テキストファイルの内容
+     */
+    private String extractStringFromTextFile(int id){
+        InputStream is = getResources().openRawResource(id);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String str, text;
+        try{
+            try{
+                // テキストファイルから全ての文章を抽出する
+                while((str = br.readLine()) != null)
+                    sb.append(str).append('\n');
+            }finally{
+                br.close();
+                // 抽出した全ての文章を格納する
+                text = sb.toString();
+            }
+        }catch(IOException e){
+            // 読み込み失敗
+            text = "Read ERROR";
+        }
+        return text;
     }
 }
