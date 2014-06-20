@@ -108,19 +108,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         PopupWindow popupWindow = createPopupWindow();
-        // ポップウィンドウのタイトル
-        TextView popupTitle = (TextView)popupWindow.getContentView().findViewById(R.id.popup_title);
         // ポップウィンドウの中身
         TextView popupBody = (TextView)popupWindow.getContentView().findViewById(R.id.popup_body);
         switch(item.getItemId()){
             case R.id.menu_info:
                 // Selected "Whant's app"
-                popupTitle.setText(R.string.menu_info);
                 popupBody.setText(extractStringFromTextFile(R.raw.whatsapp));
                 break;
             case R.id.menu_help:
                 // Selected "Help"
-                popupTitle.setText(R.string.menu_help);
                 popupBody.setText(extractStringFromTextFile(R.raw.help));
                 break;
             default:
@@ -145,7 +141,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         PopupWindow pw = new PopupWindow();
         // 背景の設定，これを設定しないと外側タッチで非表示という処理が正常に動作しなくなる
-        pw.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_bg));
+        pw.setBackgroundDrawable(getResources().getDrawable(R.drawable.pw_bg));
         pw.setContentView(pv);
         // ポップウィンドウの外側をタッチすると非表示にする
         pw.setOutsideTouchable(true);
