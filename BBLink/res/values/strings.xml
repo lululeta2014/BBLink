@@ -12,4 +12,7 @@
     <!-- メニュー -->
     <string name="menu_info">このアプリについて</string>
     <string name="menu_help">ヘルプ</string>
+
+    <!-- ポップウィンドウ -->
+    <string name="dismiss">閉じる</string>
 </resources>

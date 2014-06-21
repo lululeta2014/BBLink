@@ -146,7 +146,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         // ポップウィンドウの外側をタッチすると非表示にする
         pw.setOutsideTouchable(true);
         // ポップウィンドウ表示後フォーカスを強制するか否か（他のコンポーネントをタッチできるか否か）
-//        pw.setFocusable(true);
+        pw.setFocusable(true);
         pw.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         pw.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         return pw;
