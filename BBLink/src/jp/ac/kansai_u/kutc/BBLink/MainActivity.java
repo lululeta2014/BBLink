@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +19,7 @@ import java.io.InputStreamReader;
 public class MainActivity extends Activity implements View.OnClickListener{
     final int REQUEST_GALALLY_IMAGE = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
+    ImageView img;
     /**
      * Called when the activity is first created.
      */
@@ -29,6 +28,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        img = (ImageView)findViewById(R.id.image);
         Button loadImageButton = (Button)findViewById(R.id.loadImageButton);
         Button setServiceButton = (Button)findViewById(R.id.setServiceButton);
         Button unsetServiceButton = (Button)findViewById(R.id.unsetServiceButton);

@@ -7,6 +7,7 @@
     <string name="load_image">写真を読み込む</string>
     <string name="set_service">セット</string>
     <string name="unset_service">アンセット</string>
+    <string name="image_desc">設定画像</string>
 
     <!-- メニュー -->
     <string name="menu_info">このアプリについて</string>
