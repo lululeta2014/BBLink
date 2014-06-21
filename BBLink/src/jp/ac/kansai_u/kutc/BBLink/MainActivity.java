@@ -3,20 +3,25 @@ package jp.ac.kansai_u.kutc.BBLink;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * アプリケーションのスタートとなるアクティビティ
  * @author akasaka
  */
 public class MainActivity extends Activity implements View.OnClickListener{
+    private final String TAG = MainActivity.class.getSimpleName();  // クラス名
     final int REQUEST_GALALLY_IMAGE = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
     ImageView img;
@@ -91,7 +96,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         switch(requestCode){
             case REQUEST_GALALLY_IMAGE:
                 if(resultCode != RESULT_OK) return;
-                // ここから下，取得したデータ処理ダバー
+                Bitmap bitmap = createBmpImagefromGallery(data.getData());
+                img.setImageBitmap(bitmap);
                 break;
             default:
                 break;
@@ -177,5 +183,61 @@ public class MainActivity extends Activity implements View.OnClickListener{
             text = "Read ERROR";
         }
         return text;
+    }
+
+    /**
+     * ギャラリーで選択した画像からBitmap画像を作成する
+     * @param uri ギャラリーから選択した画像のURI
+     * @return bmp Bitmap画像
+     */
+    private Bitmap createBmpImagefromGallery(Uri uri){
+        InputStream inputStream;
+        Bitmap bmp;  // 返り値
+        ExifInterface exifInterface;
+        try{
+            // ギャラリーから選択した画像を開く
+            inputStream = getContentResolver().openInputStream(uri);
+            // ストリームからBitmapに変換
+            bmp = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            cursor.moveToPosition(0);
+            String path = cursor.getString(1);  // 画像のパスを取得
+            cursor.close();
+
+            // 画像のパスからEXIF情報を弄るためのオブジェクトを生成
+            exifInterface = new ExifInterface(path);
+        }catch(IOException e){
+            Log.e(TAG, "CANNOT CREATE BITMAP IMAGE");
+            return null;
+        }
+
+        // 画像の表示角度の取得
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        // 画像の表示角度を修正するための変数（angle）の宣言
+        int angle = 0;
+        // 表示角度が90度の場合
+        if(orientation == ExifInterface.ORIENTATION_ROTATE_90){
+            angle = 90;
+            // 表示角度が180度の場合
+        }else if(orientation == ExifInterface.ORIENTATION_ROTATE_180){
+            angle = 180;
+            // 表示角度が270度の場合
+        }else if(orientation == ExifInterface.ORIENTATION_ROTATE_270){
+            angle = 270;
+        }
+        Matrix matrix = new Matrix();
+        // 画像の表示角度を変更
+        matrix.preRotate(angle);
+        // 画像の作成
+        try{
+            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+        }catch(OutOfMemoryError error){
+            // メモリエラーが出た場合，ガベージコレクションを走らせてトライ
+            java.lang.System.gc();
+            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+        }
+        return bmp;
     }
 }
