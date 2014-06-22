@@ -192,31 +192,87 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * ギャラリーで選択した画像からBitmap画像を作成する
+     * ギャラリーで選択した画像から縮小したBitmap画像を作成する
      * @param uri ギャラリーから選択した画像のURI
      * @return bmp Bitmap画像
      */
     private Bitmap createBmpImagefromGallery(Uri uri){
-        InputStream inputStream;
-        Bitmap bmp;  // 返り値
-        ExifInterface exifInterface;
-        try{
-            // ギャラリーから選択した画像を開く
-            inputStream = getContentResolver().openInputStream(uri);
-            // ストリームからBitmapに変換
-            bmp = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-
+        String path;
+        // 画像のパスを取得
+        {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToPosition(0);
-            String path = cursor.getString(1);  // 画像のパスを取得
+            path = cursor.getString(1);
             cursor.close();
+        }
 
+        // 最終的にリサイズした幅と高さを指定
+        final int SCALE_WIDTH = img.getWidth();
+        final int SCALE_HEIGHT = img.getHeight();
+        // 画像オプションを設定するインスタンスを生成
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        // 画像のサイズ情報を読み込み，縮小率（inSampleSize）を決定する
+        {
+            // true: メモリ上に画像サイズの情報だけ読み込む
+            opt.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, opt);
+
+            // スケールする値を決める
+            int sw = opt.outWidth / SCALE_WIDTH;  // opt.outWidth: 画像の幅
+            int sh = opt.outHeight / SCALE_HEIGHT;  // opt.outHeight: 画像の高さ
+            // 縮小するサイズを指定
+            // 2のべき乗を指定する（べき乗でない場合は丸められる）
+            // 2: 1/2， 4: 1/4, ...
+            opt.inSampleSize = Math.max(sw, sh);
+            // false: メモリ上に画像を読み込む
+            opt.inJustDecodeBounds = false;
+        }
+
+        // 画像をメモリ上に展開する
+        Bitmap bmp = BitmapFactory.decodeFile(path, opt);
+        if(bmp == null){
+            // 画像の取得に失敗した場合
+            Toast toast = Toast.makeText(this, "画像の読み込みに失敗しました", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+            return null;
+        }
+
+        int bmpWidth = bmp.getWidth();
+        int bmpHeight = bmp.getHeight();
+        // 縮小したいサイズ/画像サイズ = 縮小率
+        float scale = Math.min((float)SCALE_WIDTH/bmpWidth, (float)SCALE_HEIGHT/bmpHeight);
+
+        Matrix matrix = new Matrix();
+        // 画像の表示角度を変更
+        matrix.preRotate(getAngleFromImage(path));
+        // 画像のサイズを指定
+        matrix.postScale(scale, scale);
+
+        // 画像の作成
+        try{
+            bmp = Bitmap.createBitmap(bmp, 0, 0, bmpWidth, bmpHeight, matrix, true);
+        }catch(OutOfMemoryError error){
+            // メモリエラーが出た場合，ガベージコレクションを走らせてトライ
+            java.lang.System.gc();
+            bmp = Bitmap.createBitmap(bmp, 0, 0, bmpWidth, bmpHeight, matrix, true);
+        }
+        return bmp;
+    }
+
+    /**
+     * 画像ファイルのEXIF情報から角度を取得する
+     * @param path 画像ファイルのパス
+     * @return angle 角度（0, 90, 180, 270）
+     */
+    private int getAngleFromImage(String path){
+        ExifInterface exifInterface;
+        try{
             // 画像のパスからEXIF情報を弄るためのオブジェクトを生成
             exifInterface = new ExifInterface(path);
         }catch(IOException e){
-            Log.e(TAG, "CANNOT CREATE BITMAP IMAGE");
-            return null;
+            Log.e(TAG, "CANNOT INSTANCE EXIFINTERFACE");
+            return 0;
         }
 
         // 画像の表示角度の取得
@@ -233,17 +289,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }else if(orientation == ExifInterface.ORIENTATION_ROTATE_270){
             angle = 270;
         }
-        Matrix matrix = new Matrix();
-        // 画像の表示角度を変更
-        matrix.preRotate(angle);
-        // 画像の作成
-        try{
-            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-        }catch(OutOfMemoryError error){
-            // メモリエラーが出た場合，ガベージコレクションを走らせてトライ
-            java.lang.System.gc();
-            bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-        }
-        return bmp;
+        return angle;
     }
 }
