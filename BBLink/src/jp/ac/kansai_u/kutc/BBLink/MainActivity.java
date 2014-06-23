@@ -96,7 +96,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         switch(requestCode){
             case REQUEST_GALALLY_IMAGE:
                 if(resultCode != RESULT_OK) return;
-                Bitmap bitmap = createBmpImagefromGallery(data.getData());
+                // 画像ファイルのパスを取得する
+                String path = convertUriToPath(data.getData());
+                // Bitmap画像を作成する
+                Bitmap bitmap = createBmpImagefromGallery(path);
                 img.setImageBitmap(bitmap);
                 break;
             default:
@@ -193,20 +196,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     /**
      * ギャラリーで選択した画像から縮小したBitmap画像を作成する
-     * @param uri ギャラリーから選択した画像のURI
+     * @param path ギャラリーから選択した画像のパス
      * @return bmp Bitmap画像
      */
-    private Bitmap createBmpImagefromGallery(Uri uri){
-        String path;
-        // 画像のパスを取得
-        {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            cursor.moveToPosition(0);
-            path = cursor.getString(1);
-            cursor.close();
-        }
+    private Bitmap createBmpImagefromGallery(String path){
 
-        // 最終的にリサイズした幅と高さを指定
+        // 最終的にリサイズしたい幅と高さを指定
         final int SCALE_WIDTH = img.getWidth();
         final int SCALE_HEIGHT = img.getHeight();
         // 画像オプションを設定するインスタンスを生成
@@ -245,7 +240,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         Matrix matrix = new Matrix();
         // 画像の表示角度を変更
-        matrix.preRotate(getAngleFromImage(path));
+        matrix.preRotate(getAngleFromExif(path));
         // 画像のサイズを指定
         matrix.postScale(scale, scale);
 
@@ -265,7 +260,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
      * @param path 画像ファイルのパス
      * @return angle 角度（0, 90, 180, 270）
      */
-    private int getAngleFromImage(String path){
+    private int getAngleFromExif(String path){
         ExifInterface exifInterface;
         try{
             // 画像のパスからEXIF情報を弄るためのオブジェクトを生成
@@ -290,5 +285,19 @@ public class MainActivity extends Activity implements View.OnClickListener{
             angle = 270;
         }
         return angle;
+    }
+
+    /**
+     * ファイルのURIからString型のパスに変換する
+     * @param uri ファイルのURI
+     * @return ファイルのパス（文字列）
+     */
+    private String convertUriToPath(Uri uri){
+        String path;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToPosition(0);
+        path = cursor.getString(1);
+        cursor.close();
+        return path;
     }
 }
