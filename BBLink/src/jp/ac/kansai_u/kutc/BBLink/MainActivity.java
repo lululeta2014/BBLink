@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -22,7 +23,7 @@ import java.io.*;
  */
 public class MainActivity extends Activity implements View.OnClickListener{
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
-    final int REQUEST_GALALLY_IMAGE = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
+    final int GALALLY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
     ImageView img;
     /**
@@ -79,25 +80,37 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v){
         if(v.getId() == R.id.loadImageButton){
             // ギャラリーから画像を取得する
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");  // 画像タイプに限定
-            startActivityForResult(intent, REQUEST_GALALLY_IMAGE);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+                // Version 4.4 >
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");  // 画像タイプに限定
+                startActivityForResult(intent, GALALLY_INTENT);
+            }else{
+                // Version 4.4 <=
+                // TODO: 恐らく4.4未満と同じインテント処理でもいける，後々考える
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");  // 画像タイプに限定
+                startActivityForResult(intent, GALALLY_INTENT);
+            }
         }else if(v.getId() == R.id.setServiceButton){
-            startService(wallPaperService);
+//            startService(wallPaperService);
         }else if(v.getId() == R.id.unsetServiceButton){
-            stopService(wallPaperService);
+//            stopService(wallPaperService);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != RESULT_OK) return;
+        if(data == null) return;
         switch(requestCode){
-            case REQUEST_GALALLY_IMAGE:
-                if(resultCode != RESULT_OK) return;
-                // 画像ファイルのパスを取得する
-                String path = convertUriToPath(data.getData());
+            case GALALLY_INTENT:
+                Uri uri = data.getData();
+                // URIから画像ファイルのパスを取得する
+                String path = PathUtils.getPath(getApplicationContext(), uri);
                 // Bitmap画像を作成する
                 Bitmap bitmap = createBmpImagefromGallery(path);
                 img.setImageBitmap(bitmap);
@@ -285,19 +298,5 @@ public class MainActivity extends Activity implements View.OnClickListener{
             angle = 270;
         }
         return angle;
-    }
-
-    /**
-     * ファイルのURIからString型のパスに変換する
-     * @param uri ファイルのURI
-     * @return ファイルのパス（文字列）
-     */
-    private String convertUriToPath(Uri uri){
-        String path;
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToPosition(0);
-        path = cursor.getString(1);
-        cursor.close();
-        return path;
     }
 }
