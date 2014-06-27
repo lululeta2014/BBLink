@@ -47,36 +47,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-    }
-
-    @Override
     public void onClick(View v){
         if(v.getId() == R.id.loadImageButton){
             // ギャラリーから画像を取得する
@@ -287,16 +257,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
         int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         // 画像の表示角度を修正するための変数（angle）の宣言
         int angle = 0;
-        // 表示角度が90度の場合
-        if(orientation == ExifInterface.ORIENTATION_ROTATE_90){
+        if(orientation == ExifInterface.ORIENTATION_ROTATE_90)
+            // 表示角度が90度の場合
             angle = 90;
+        else if(orientation == ExifInterface.ORIENTATION_ROTATE_180)
             // 表示角度が180度の場合
-        }else if(orientation == ExifInterface.ORIENTATION_ROTATE_180){
             angle = 180;
+        else if(orientation == ExifInterface.ORIENTATION_ROTATE_270)
             // 表示角度が270度の場合
-        }else if(orientation == ExifInterface.ORIENTATION_ROTATE_270){
             angle = 270;
-        }
+
         return angle;
     }
 }

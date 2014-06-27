@@ -129,7 +129,6 @@ public class PathUtils{
         return null;
     }
 
-
     /**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
