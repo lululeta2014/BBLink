@@ -3,7 +3,6 @@ package jp.ac.kansai_u.kutc.BBLink;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -79,10 +78,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         switch(requestCode){
             case GALALLY_INTENT:
                 Uri uri = data.getData();
-                // URIから画像ファイルのパスを取得する
-                String path = PathUtils.getPath(getApplicationContext(), uri);
                 // Bitmap画像を作成する
-                Bitmap bitmap = createBmpImagefromGallery(path);
+                Bitmap bitmap = createBmpImagefromGallery(uri);
                 img.setImageBitmap(bitmap);
                 break;
             default:
@@ -179,11 +176,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     /**
      * ギャラリーで選択した画像から縮小したBitmap画像を作成する
-     * @param path ギャラリーから選択した画像のパス
+     * @param uri ギャラリーインテントから取得したURI
      * @return bmp Bitmap画像
      */
-    private Bitmap createBmpImagefromGallery(String path){
+    private Bitmap createBmpImagefromGallery(Uri uri){
 
+        InputStream is = null;
         // 最終的にリサイズしたい幅と高さを指定
         final int SCALE_WIDTH = img.getWidth();
         final int SCALE_HEIGHT = img.getHeight();
@@ -193,8 +191,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
         {
             // true: メモリ上に画像サイズの情報だけ読み込む
             opt.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, opt);
-
+            try{
+                is = getContentResolver().openInputStream(uri);
+                BitmapFactory.decodeStream(is, null, opt);
+            }catch(FileNotFoundException e){
+                Toast.makeText(this, "ファイルが見つかりません", Toast.LENGTH_SHORT).show();
+            }finally{
+                if(is != null) try{
+                    is.close();
+                }catch(IOException e){
+                    Toast.makeText(this, "ストリームのクローズに失敗しました", Toast.LENGTH_SHORT).show();
+                }
+            }
             // スケールする値を決める
             int sw = opt.outWidth / SCALE_WIDTH;  // opt.outWidth: 画像の幅
             int sh = opt.outHeight / SCALE_HEIGHT;  // opt.outHeight: 画像の高さ
@@ -207,7 +215,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
 
         // 画像をメモリ上に展開する
-        Bitmap bmp = BitmapFactory.decodeFile(path, opt);
+        Bitmap bmp = null;
+        try{
+            is = getContentResolver().openInputStream(uri);
+            bmp = BitmapFactory.decodeStream(is, null, opt);
+        }catch(FileNotFoundException e){
+            Toast.makeText(this, "ファイルが見つかりません", Toast.LENGTH_SHORT).show();
+        }finally{
+            if(is != null) try{
+                is.close();
+            }catch(IOException e){
+                Toast.makeText(this, "ストリームのクローズに失敗しました", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         if(bmp == null){
             // 画像の取得に失敗した場合
             Toast toast = Toast.makeText(this, "画像の読み込みに失敗しました", Toast.LENGTH_SHORT);
@@ -223,7 +244,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         Matrix matrix = new Matrix();
         // 画像の表示角度を変更
-        matrix.preRotate(getAngleFromExif(path));
+        matrix.preRotate(getAngleFromExif(PathUtils.getPath(getApplicationContext(), uri)));
         // 画像のサイズを指定
         matrix.postScale(scale, scale);
 
@@ -244,6 +265,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
      * @return angle 角度（0, 90, 180, 270）
      */
     private int getAngleFromExif(String path){
+        if(path == null) return 0;
         ExifInterface exifInterface;
         try{
             // 画像のパスからEXIF情報を弄るためのオブジェクトを生成
