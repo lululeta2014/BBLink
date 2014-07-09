@@ -3,6 +3,7 @@ package jp.ac.kansai_u.kutc.BBLink;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import at.technikum.mti.fancycoverflow.FancyCoverFlow;
 
 import java.io.*;
 
@@ -21,10 +23,17 @@ import java.io.*;
  * @author akasaka
  */
 public class MainActivity extends Activity implements View.OnClickListener{
+    private FancyCoverFlow fancyCoverFlow;
+    private CoverFlowAdapter coverFlowAdapter = new CoverFlowAdapter();
+
+    // フレーム画像格納用 TODO: 後々変更の可能性あり
+    private final int[] frameImages = {R.drawable.image1, R.drawable.image2, R.drawable.image3,
+                                 R.drawable.image4, R.drawable.image5, R.drawable.image6, };
+
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
     final int GALALLY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
-    ImageView img;
+
     /**
      * Called when the activity is first created.
      */
@@ -33,7 +42,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        img = (ImageView)findViewById(R.id.image);
         Button loadImageButton = (Button)findViewById(R.id.loadImageButton);
         Button setServiceButton = (Button)findViewById(R.id.setServiceButton);
         Button unsetServiceButton = (Button)findViewById(R.id.unsetServiceButton);
@@ -43,6 +51,24 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         // サービス起動用のインテント
         wallPaperService = new Intent(this, WallPaperService.class);
+
+        // 初期フレームの画像を設定する TODO: 後々変更の可能性あり
+        for (int i = 0; i < frameImages.length; i++) {
+            Resources r = getResources();
+            Bitmap bmp = BitmapFactory.decodeResource(r, frameImages[i]);
+            coverFlowAdapter.setBitmap(i, bmp);
+        }
+
+        // カバーフローを作成する
+        this.fancyCoverFlow = (FancyCoverFlow) this.findViewById(R.id.fancyCoverFlow);
+        this.fancyCoverFlow.setAdapter(coverFlowAdapter); //アダプター
+        this.fancyCoverFlow.setUnselectedAlpha(1.0f); //透明度
+        this.fancyCoverFlow.setUnselectedSaturation(1.0f); //彩度
+        this.fancyCoverFlow.setUnselectedScale(0.5f); //縮小
+        this.fancyCoverFlow.setSpacing(50); //距離
+        this.fancyCoverFlow.setMaxRotation(0); //回転角度
+        this.fancyCoverFlow.setScaleDownGravity(0.5f); //数値を上げるほど，未選択の画像が下に下がってくる
+        this.fancyCoverFlow.setActionDistance(FancyCoverFlow.ACTION_DISTANCE_AUTO); // わからない
     }
 
     @Override
@@ -80,7 +106,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Uri uri = data.getData();
                 // Bitmap画像を作成する
                 Bitmap bitmap = createBmpImagefromGallery(uri);
-                img.setImageBitmap(bitmap);
+
+                // カバーフローの該当箇所を取得してBitmap画像に変更する
+                int position = this.fancyCoverFlow.getSelectedItemPosition();
+                coverFlowAdapter.setBitmap(position, bitmap);
+                this.fancyCoverFlow.setAdapter(coverFlowAdapter); //アダプター
+                this.fancyCoverFlow.setSelection(position);
+
                 break;
             default:
                 break;
@@ -183,8 +215,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         InputStream is = null;
         // 最終的にリサイズしたい幅と高さを指定
-        final int SCALE_WIDTH = img.getWidth();
-        final int SCALE_HEIGHT = img.getHeight();
+//        final int SCALE_WIDTH = img.getWidth();
+//        final int SCALE_HEIGHT = img.getHeight();
+        // TODO: 変更の可能性大
+        final int SCALE_WIDTH = 300;
+        final int SCALE_HEIGHT = 700;
         // 画像オプションを設定するインスタンスを生成
         BitmapFactory.Options opt = new BitmapFactory.Options();
         // 画像のサイズ情報を読み込み，縮小率（inSampleSize）を決定する
