@@ -119,35 +119,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        PopupWindow popupWindow = createPopupWindow();
-        // ポップウィンドウの中身
-        TextView popupBody = (TextView)popupWindow.getContentView().findViewById(R.id.popup_body);
-        switch(item.getItemId()){
-            case R.id.menu_info:
-                // Selected "Whant's app"
-                popupBody.setText(extractStringFromTextFile(R.raw.whatsapp));
-                break;
-            case R.id.menu_help:
-                // Selected "Help"
-                popupBody.setText(extractStringFromTextFile(R.raw.help));
-                break;
-            default:
-                break;
-        }
-        // ポップウィンドウの表示
-        popupWindow.showAtLocation(this.findViewById(R.id.menu_info), Gravity.CENTER, 0, 0);
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * ポップウィンドウを作成する
      * @return 作成したポップウィンドウ

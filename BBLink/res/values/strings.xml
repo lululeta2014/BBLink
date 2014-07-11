@@ -7,10 +7,6 @@
     <string name="load_image">写真を読み込む</string>
     <string name="set_service">セット</string>
 
-    <!-- メニュー -->
-    <string name="menu_info">このアプリについて</string>
-    <string name="menu_help">ヘルプ</string>
-
     <!-- ポップウィンドウ -->
     <string name="dismiss">閉じる</string>
 </resources>
