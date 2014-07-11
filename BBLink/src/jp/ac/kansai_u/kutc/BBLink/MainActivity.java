@@ -120,37 +120,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * ポップウィンドウを作成する
-     * @return 作成したポップウィンドウ
-     */
-    private PopupWindow createPopupWindow(){
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // /res/layout/popup.xmlからレイアウト情報を引っ張ってくる
-        View popupView = inflater.inflate(R.layout.popup, null);
-        popupView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        final PopupWindow popupWindow = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        // 背景の設定，これを設定しないと外側タッチで非表示という処理が正常に動作しなくなる
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.pw_bg));
-        // ポップウィンドウの外側をタッチすると非表示にする
-        popupWindow.setOutsideTouchable(true);
-        // ポップウィンドウ表示後フォーカスを強制するか否か（他のコンポーネントをタッチできるか否か）
-//        popupWindow.setFocusable(true);
-        Button dismissBtn = (Button)popupView.findViewById(R.id.dismiss);
-        dismissBtn.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                popupWindow.dismiss();
-            }
-        });
-
-        return popupWindow;
-    }
-
-    /**
      * テキストファイルから文字列を抽出する
      * @param id テキストファイルのID
      * @return テキストファイルの内容

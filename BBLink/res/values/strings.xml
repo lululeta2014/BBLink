@@ -6,7 +6,4 @@
     <string name="header">写真を決めよう</string>
     <string name="load_image">写真を読み込む</string>
     <string name="set_service">セット</string>
-
-    <!-- ポップウィンドウ -->
-    <string name="dismiss">閉じる</string>
 </resources>
