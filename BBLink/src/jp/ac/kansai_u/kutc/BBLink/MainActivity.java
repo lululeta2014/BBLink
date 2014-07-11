@@ -42,12 +42,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
         Button loadImageButton = (Button)findViewById(R.id.loadImageButton);
         Button setServiceButton = (Button)findViewById(R.id.setServiceButton);
-        Button unsetServiceButton = (Button)findViewById(R.id.unsetServiceButton);
+        preferencesButton.setOnClickListener(this);
         loadImageButton.setOnClickListener(this);
         setServiceButton.setOnClickListener(this);
-        unsetServiceButton.setOnClickListener(this);
 
         // サービス起動用のインテント
         wallPaperService = new Intent(this, WallPaperService.class);
@@ -93,8 +93,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         }else if(v.getId() == R.id.setServiceButton){
 //            startService(wallPaperService);
-        }else if(v.getId() == R.id.unsetServiceButton){
-//            stopService(wallPaperService);
         }
     }
 
