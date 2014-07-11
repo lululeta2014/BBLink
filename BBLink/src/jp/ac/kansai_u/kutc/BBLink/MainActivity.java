@@ -89,6 +89,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 intent.setType("image/*");  // 画像タイプに限定
                 startActivityForResult(intent, GALALLY_INTENT);
             }
+        }else if(v.getId() == R.id.preferencesButton){
+
         }else if(v.getId() == R.id.setServiceButton){
 //            startService(wallPaperService);
         }else if(v.getId() == R.id.unsetServiceButton){
