@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/app_preferences">
+        <SwitchPreference
+                android:key="running_service"
+                android:title="@string/service_status" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/whatsapp">
+        <PreferenceScreen android:title="@string/help">
+            <!--
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="" />
+                    -->
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="@string/kredit">
+            <!--
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="" />
+                    -->
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

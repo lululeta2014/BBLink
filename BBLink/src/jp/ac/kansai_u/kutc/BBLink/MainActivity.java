@@ -90,7 +90,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 startActivityForResult(intent, GALALLY_INTENT);
             }
         }else if(v.getId() == R.id.preferencesButton){
-
+            // 設定画面の呼び出し
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, new PrefsFragment())
+                    .addToBackStack(null)
+                    .commit();
         }else if(v.getId() == R.id.setServiceButton){
 //            startService(wallPaperService);
         }

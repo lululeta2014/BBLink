@@ -6,4 +6,16 @@
     <string name="header">写真を決めよう</string>
     <string name="load_image">写真を読み込む</string>
     <string name="set_service">セット</string>
+
+    <!-- 設定画面 -->
+    <!-- 設定カテゴリ -->
+    <string name="app_preferences">設定</string>
+    <string name="service_status">サービスの状態</string>
+    <string name="service_running_summary">壁紙が変更します</string>
+    <string name="service_stop_summary">壁紙が変更しません</string>
+    <!-- このアプリについてカテゴリ -->
+    <string name="whatsapp">このアプリについて</string>
+    <string name="help">ヘルプ</string>
+    <string name="kredit">クレジット</string>
+    
 </resources>
