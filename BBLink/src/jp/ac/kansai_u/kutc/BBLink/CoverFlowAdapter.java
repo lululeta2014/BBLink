@@ -4,18 +4,27 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.ImageView;
 import at.technikum.mti.fancycoverflow.FancyCoverFlow;
 import at.technikum.mti.fancycoverflow.FancyCoverFlowAdapter;
 
 /**
  * カバーフローに適用するアダプター
- * Created by yukihiro on 2014/07/05.
+ * @author yukihiro akasaka
  */
 public class CoverFlowAdapter extends FancyCoverFlowAdapter {
-    private int[] images = new int[6]; //使用するカバーフローのアイテム分宣言すること（※ライブラリの都合上必ず必要）
-    private CustomViewGroup imageViews[] = new CustomViewGroup[6]; //オリジナルレイアウト
-    private Bitmap bmpArray[] = new Bitmap[6]; //
+    private int[] images;
+    private CustomViewGroup imageViews[];
+    private Bitmap bmpArray[];
+
+    /**
+     * @param size カバーフローのアイテム数
+     */
+    CoverFlowAdapter(int size){
+        super();
+        images = new int[size];  // カバーフローのアイテム数領域を確保（※ライブラリの都合上必ず必要）
+        imageViews = new CustomViewGroup[size];  // オリジナルレイアウト
+        bmpArray = new Bitmap[size];  // アイテム数の画像領域
+    }
 
     @Override
     public int getCount() {

@@ -23,12 +23,9 @@ import java.io.*;
  * @author akasaka
  */
 public class MainActivity extends Activity implements View.OnClickListener{
+    private final int COVER_FLOW_SIZE = 6;  // カバーフローのアイテム数
     private FancyCoverFlow fancyCoverFlow;
-    private CoverFlowAdapter coverFlowAdapter = new CoverFlowAdapter();
-
-    // フレーム画像格納用 TODO: 後々変更の可能性あり
-    private final int[] frameImages = {R.drawable.image1, R.drawable.image2, R.drawable.image3,
-                                 R.drawable.image4, R.drawable.image5, R.drawable.image6, };
+    private CoverFlowAdapter coverFlowAdapter = new CoverFlowAdapter(COVER_FLOW_SIZE);
 
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
     final int GALLERY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
@@ -53,10 +50,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         wallPaperService = new Intent(this, WallPaperService.class);
 
         // 初期フレームの画像を設定する TODO: 後々変更の可能性あり
-        for (int i = 0; i < frameImages.length; i++) {
-            Resources r = getResources();
-            Bitmap bmp = BitmapFactory.decodeResource(r, frameImages[i]);
-            coverFlowAdapter.setBitmap(i, bmp);
+        for (int i = 0; i < COVER_FLOW_SIZE; i++) {
+            coverFlowAdapter.setBitmap(i, BitmapFactory.decodeResource(getResources(), R.drawable.image));
         }
 
         // カバーフローを作成する
