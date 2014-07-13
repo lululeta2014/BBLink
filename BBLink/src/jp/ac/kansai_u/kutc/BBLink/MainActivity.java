@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                                  R.drawable.image4, R.drawable.image5, R.drawable.image6, };
 
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
-    final int GALALLY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
+    final int GALLERY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
 
     /**
@@ -80,14 +80,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");  // 画像タイプに限定
-                startActivityForResult(intent, GALALLY_INTENT);
+                startActivityForResult(intent, GALLERY_INTENT);
             }else{
                 // Version 4.4 <=
                 // TODO: 恐らく4.4未満と同じインテント処理でもいける，後々考える
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");  // 画像タイプに限定
-                startActivityForResult(intent, GALALLY_INTENT);
+                startActivityForResult(intent, GALLERY_INTENT);
             }
         }else if(v.getId() == R.id.preferencesButton){
             // 設定画面の呼び出し
@@ -107,7 +107,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         if(resultCode != RESULT_OK) return;
         if(data == null) return;
         switch(requestCode){
-            case GALALLY_INTENT:
+            case GALLERY_INTENT:
                 Uri uri = data.getData();
                 // Bitmap画像を作成する
                 Bitmap bitmap = createBmpImagefromGallery(uri);
