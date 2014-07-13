@@ -9,17 +9,15 @@
 
     <PreferenceCategory android:title="@string/whatsapp">
         <PreferenceScreen android:title="@string/help">
-            <!--
-            <intent android:action="android.intent.action.VIEW"
-                    android:data="" />
-                    -->
+            <intent android:action="android.intent.action.MAIN"
+                    android:targetPackage="jp.ac.kansai_u.kutc.BBLink"
+                    android:targetClass="jp.ac.kansai_u.kutc.BBLink.WhatsApp.HelpActivity"/>
         </PreferenceScreen>
 
         <PreferenceScreen android:title="@string/kredit">
-            <!--
-            <intent android:action="android.intent.action.VIEW"
-                    android:data="" />
-                    -->
+            <intent android:action="android.intent.action.MAIN"
+                    android:targetPackage="jp.ac.kansai_u.kutc.BBLink"
+                    android:targetClass="jp.ac.kansai_u.kutc.BBLink.WhatsApp.CreditActivity"/>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

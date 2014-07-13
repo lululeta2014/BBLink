@@ -24,6 +24,16 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <!-- 壁紙変更サービスの登録 -->
         <service android:name=".WallPaperService"/>
+        <!-- ヘルプ画面アクティビティの登録 -->
+        <!-- TODO: 横画面対応？-->
+        <activity android:name=".WhatsApp.HelpActivity"
+                  android:screenOrientation="portrait"
+                  android:finishOnTaskLaunch="true"/>
+        <!-- クレジット画面アクティビティの登録 -->
+        <activity android:name=".WhatsApp.CreditActivity"
+                  android:screenOrientation="portrait"
+                  android:finishOnTaskLaunch="true"/>
     </application>
 </manifest>
