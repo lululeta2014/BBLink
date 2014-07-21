@@ -13,8 +13,8 @@ import at.technikum.mti.fancycoverflow.FancyCoverFlowAdapter;
  */
 public class CoverFlowAdapter extends FancyCoverFlowAdapter {
     private int[] images;
-    private CustomViewGroup imageViews[];
-    private Bitmap bmpArray[];
+    private CustomViewGroup[] imageViews;
+    private Bitmap[] bmpArray;
 
     /**
      * @param size カバーフローのアイテム数
@@ -64,6 +64,16 @@ public class CoverFlowAdapter extends FancyCoverFlowAdapter {
         imageViews[i].setBitmap(bmpArray[i]);
         imageViews[i].getImageView().setImageBitmap(imageViews[i].getBitmap());
         return imageViews[i];
+    }
+
+    /**
+     * Bitmap画像の配列をパラメータのものとスワップする
+     * @param imgs スワップする各画像
+     * Ref: http://stackoverflow.com/questions/14503006/android-listview-not-refreshing-after-notifydatasetchanged
+     */
+    public void swapImages(Bitmap[] imgs){
+        this.bmpArray = imgs;
+        notifyDataSetChanged();
     }
 }
 
