@@ -7,6 +7,17 @@
     <string name="load_image">写真を読み込む</string>
     <string name="set_service">セット</string>
 
+    <!-- 画像ファイル名 -->
+    <!-- バッテリ残量が低い順から -->
+    <string-array name="images_name">
+        <item>LL</item> <!-- Low-Low -->
+        <item>LH</item> <!-- Low-High -->
+        <item>ML</item> <!-- Medium-Low -->
+        <item>MH</item> <!-- Medium-High -->
+        <item>HL</item> <!-- High-Low -->
+        <item>HH</item> <!-- High-High -->
+    </string-array>
+
     <!-- 設定画面 -->
     <!-- 設定カテゴリ -->
     <string name="app_preferences">設定</string>
@@ -17,5 +28,5 @@
     <string name="whatsapp">このアプリについて</string>
     <string name="help">ヘルプ</string>
     <string name="kredit">クレジット</string>
-    
+
 </resources>
