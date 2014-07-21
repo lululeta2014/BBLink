@@ -1,9 +1,7 @@
 package jp.ac.kansai_u.kutc.BBLink;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -23,9 +21,9 @@ import java.io.*;
  * @author akasaka
  */
 public class MainActivity extends Activity implements View.OnClickListener{
-    private final int COVER_FLOW_SIZE = 6;  // カバーフローのアイテム数
-    private FancyCoverFlow fancyCoverFlow;
-    private CoverFlowAdapter coverFlowAdapter = new CoverFlowAdapter(COVER_FLOW_SIZE);
+    private String[] imgNames;  // 各画像ファイル名
+    private FancyCoverFlow fancyCoverFlow;  // カバーフロービュー
+    private CoverFlowAdapter coverFlowAdapter;  // カバーフローにセットするアダプタ
 
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
     final int GALLERY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
@@ -49,9 +47,28 @@ public class MainActivity extends Activity implements View.OnClickListener{
         // サービス起動用のインテント
         wallPaperService = new Intent(this, WallPaperService.class);
 
+        // 各画像のファイル名を取得する
+        imgNames = getResources().getStringArray(R.array.images_name);
+        // 画像ファイル数分のサイズを持つアダプタを生成
+        coverFlowAdapter = new CoverFlowAdapter(imgNames.length);
+
         // 初期フレームの画像を設定する TODO: 後々変更の可能性あり
-        for (int i = 0; i < COVER_FLOW_SIZE; i++) {
-            coverFlowAdapter.setBitmap(i, BitmapFactory.decodeResource(getResources(), R.drawable.image));
+        for (int i = 0; i < imgNames.length; i++) {
+            FileInputStream fis = null;
+            try{
+                fis = openFileInput(imgNames[i] + ".png");
+                coverFlowAdapter.setBitmap(i, BitmapFactory.decodeStream(fis));
+            }catch(FileNotFoundException e){
+                // ファイルが存在しない場合，初期画像を表示する
+                coverFlowAdapter.setBitmap(i, BitmapFactory.decodeResource(getResources(), R.drawable.init_img));
+            }finally{
+                if(fis != null)
+                    try{
+                        fis.close();
+                    }catch(IOException e){
+                        Toast.makeText(this, "ストリームの解放に失敗しました", Toast.LENGTH_SHORT).show();
+                    }
+            }
         }
 
         // カバーフローを作成する
@@ -112,6 +129,22 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 coverFlowAdapter.setBitmap(position, bitmap);
                 this.fancyCoverFlow.setAdapter(coverFlowAdapter); //アダプター
                 this.fancyCoverFlow.setSelection(position);
+
+                // 画像を保存
+                FileOutputStream fos = null;
+                try{
+                    fos = openFileOutput(imgNames[position] + ".png", MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                }catch(FileNotFoundException e){
+                    Toast.makeText(this, "画像の保存に失敗しました", Toast.LENGTH_SHORT).show();
+                }finally{
+                    try{
+                        if(fos != null)
+                            fos.close();
+                    }catch(IOException e){
+                        Toast.makeText(this, "ストリームの解放に失敗しました", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 break;
             default:
