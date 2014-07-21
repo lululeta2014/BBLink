@@ -51,25 +51,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
         imgNames = getResources().getStringArray(R.array.images_name);
         // 画像ファイル数分のサイズを持つアダプタを生成
         coverFlowAdapter = new CoverFlowAdapter(imgNames.length);
-
-        // 初期フレームの画像を設定する TODO: 後々変更の可能性あり
-        for (int i = 0; i < imgNames.length; i++) {
-            FileInputStream fis = null;
-            try{
-                fis = openFileInput(imgNames[i] + ".png");
-                coverFlowAdapter.setBitmap(i, BitmapFactory.decodeStream(fis));
-            }catch(FileNotFoundException e){
-                // ファイルが存在しない場合，初期画像を表示する
-                coverFlowAdapter.setBitmap(i, BitmapFactory.decodeResource(getResources(), R.drawable.init_img));
-            }finally{
-                if(fis != null)
-                    try{
-                        fis.close();
-                    }catch(IOException e){
-                        Toast.makeText(this, "ストリームの解放に失敗しました", Toast.LENGTH_SHORT).show();
-                    }
-            }
-        }
+        // 非同期処理で初期フレームの画像を表示する
+        new LoadImageTask(MainActivity.this, coverFlowAdapter).execute(imgNames);
 
         // カバーフローを作成する
         this.fancyCoverFlow = (FancyCoverFlow) this.findViewById(R.id.fancyCoverFlow);
