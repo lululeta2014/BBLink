@@ -1,5 +1,6 @@
 package jp.ac.kansai_u.kutc.BBLink;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
  *         Created by akasaka on 2014/07/11.
  */
 public class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+    Intent wallpaperService = null;  // サービス用インテント
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -23,6 +26,9 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
 
         // サービスの状態を読み込み，説明を設定する
         setSummaryToPref(getString(R.string.service_status_key));
+
+        // インテントの生成
+        wallpaperService = new Intent(getActivity(), WallPaperService.class);
     }
 
     @Override
@@ -39,8 +45,19 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
         // 設定が変更したときのコールバック関数
-        // 動的にサマリを変更する
-        setSummaryToPref(getString(R.string.service_status_key));
+
+        // 「サービスの状態」が変更したとき
+        if(key.equals(getString(R.string.service_status_key))){
+            // keyに対応するスイッチを取得
+            SwitchPreference sp = (SwitchPreference)getPreferenceScreen().findPreference(key);
+            // サマリを変更する
+            setSummaryToPref(key);
+            // Start or Stop Service
+            if(sp.isChecked())
+                getActivity().startService(wallpaperService);
+            else
+                getActivity().stopService(wallpaperService);
+        }
     }
 
     @Override
