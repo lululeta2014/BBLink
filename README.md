@@ -7,6 +7,10 @@ System Requirements
 ===
 greater than Android 4.0
 
+Using Library
+===
+[cropimage](https://github.com/biokys/cropimage) - 使用に伴い，ライブラリ内のソースコードを一部改変
+
 Dependency Library
 ===
 [FancyCoverFlow](https://github.com/davidschreiber/FancyCoverFlow)
