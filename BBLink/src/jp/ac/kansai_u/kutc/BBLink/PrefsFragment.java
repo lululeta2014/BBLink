@@ -22,7 +22,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         addPreferencesFromResource(R.xml.preferences);
 
         // サービスの状態を読み込み，説明を設定する
-        setSummaryToPref("running_service");
+        setSummaryToPref(getString(R.string.service_status_key));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
         // 設定が変更したときのコールバック関数
         // 動的にサマリを変更する
-        setSummaryToPref("running_service");
+        setSummaryToPref(getString(R.string.service_status_key));
     }
 
     @Override

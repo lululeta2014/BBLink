@@ -28,6 +28,8 @@
     <string name="whatsapp">このアプリについて</string>
     <string name="help">ヘルプ</string>
     <string name="kredit">クレジット</string>
+    <!-- KEY -->
+    <string name="service_status_key">service_status</string>
 
     <!-- simplecropimage関連 -->
     <string name="cancel">Cancel</string>

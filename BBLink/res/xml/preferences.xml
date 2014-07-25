@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="@string/app_preferences">
         <SwitchPreference
-                android:key="running_service"
+                android:key="@string/service_status_key"
                 android:title="@string/service_status" />
     </PreferenceCategory>
 
