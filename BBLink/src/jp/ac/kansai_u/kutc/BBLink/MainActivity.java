@@ -3,6 +3,7 @@ package jp.ac.kansai_u.kutc.BBLink;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -10,6 +11,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -30,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private final String TAG = MainActivity.class.getSimpleName();  // クラス名
     final int GALLERY_INTENT = 0x12FCEA7;  // ギャラリーインテント時の返却値（任意の数値）
     Intent wallPaperService = null;  // WallPaperServiceクラス起動用のインテント
+    SharedPreferences preferences;  // アプリの設定情報
 
     /**
      * Called when the activity is first created.
@@ -67,9 +70,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
         this.fancyCoverFlow.setScaleDownGravity(FancyCoverFlow.SCALEDOWN_GRAVITY_CENTER);  //未選択の画像の位置
         this.fancyCoverFlow.setActionDistance(FancyCoverFlow.ACTION_DISTANCE_AUTO); // わからない
 
+        // 壁紙の最適なサイズを取得
         WallpaperManager wm = WallpaperManager.getInstance(this);
         Log.d(TAG, String.valueOf(wm.getDesiredMinimumWidth()));
         Log.d(TAG, String.valueOf(wm.getDesiredMinimumHeight()));
+
+        // アプリの設定情報を取得
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -99,6 +106,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     .commit();
         }else if(v.getId() == R.id.setServiceButton){
 //            startService(wallPaperService);
+
+            // サービスの状態をON（running）に設定する
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(getString(R.string.service_status_key), true);
+            editor.commit();
+
+            this.finish();  // アプリケーションを終了する
         }
     }
 
