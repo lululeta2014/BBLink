@@ -4,8 +4,8 @@
 
     <!-- アクティビティ -->
     <string name="header">写真を決めよう</string>
-    <string name="load_image">写真を読み込む</string>
-    <string name="set_service">セット</string>
+    <string name="load_image">写真を選ぶ</string>
+    <string name="set_service">決定して終了</string>
 
     <!-- 画像ファイル名 -->
     <!-- バッテリ残量が低い順から -->
