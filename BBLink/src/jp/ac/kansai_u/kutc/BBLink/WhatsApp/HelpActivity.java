@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 /**
  * ヘルプ画面
+ *
  * @author akasaka
  */
 public class HelpActivity extends Activity{

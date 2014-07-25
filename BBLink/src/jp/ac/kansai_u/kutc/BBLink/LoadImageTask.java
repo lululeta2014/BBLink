@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * 画像読み込みを非同期で行うクラス
+ *
  * @author akasaka
  */
 public class LoadImageTask extends AsyncTask<String, Integer, Bitmap[]>{
@@ -44,7 +45,7 @@ public class LoadImageTask extends AsyncTask<String, Integer, Bitmap[]>{
     protected Bitmap[] doInBackground(String... imgNames){
         progressDialog.setMax(imgNames.length);
         Bitmap[] bitmaps = new Bitmap[imgNames.length];
-        for(int i=0; i<imgNames.length; i++){
+        for(int i = 0; i < imgNames.length; i++){
             FileInputStream fis = null;
             try{
                 // 画像ファイル名からストリームを作成する

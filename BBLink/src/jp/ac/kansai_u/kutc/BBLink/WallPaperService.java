@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * バッテリ容量をチェックし壁紙を変更するサービス
+ *
  * @author akasaka
  */
 public class WallPaperService extends Service{

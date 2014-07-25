@@ -1,6 +1,7 @@
 package jp.ac.kansai_u.kutc.BBLink;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,7 @@ import java.io.*;
 
 /**
  * アプリケーションのスタートとなるアクティビティ
+ *
  * @author akasaka
  */
 public class MainActivity extends Activity implements View.OnClickListener{
@@ -55,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         new LoadImageTask(MainActivity.this, coverFlowAdapter).execute(imgNames);
 
         // カバーフローを作成する
-        this.fancyCoverFlow = (FancyCoverFlow) this.findViewById(R.id.fancyCoverFlow);
+        this.fancyCoverFlow = (FancyCoverFlow)this.findViewById(R.id.fancyCoverFlow);
         this.fancyCoverFlow.setAdapter(coverFlowAdapter); //アダプター
         this.fancyCoverFlow.setUnselectedAlpha(1.0f); //透明度
         this.fancyCoverFlow.setUnselectedSaturation(1.0f); //彩度
@@ -64,6 +66,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         this.fancyCoverFlow.setMaxRotation(0); //回転角度
         this.fancyCoverFlow.setScaleDownGravity(FancyCoverFlow.SCALEDOWN_GRAVITY_CENTER);  //未選択の画像の位置
         this.fancyCoverFlow.setActionDistance(FancyCoverFlow.ACTION_DISTANCE_AUTO); // わからない
+
+        WallpaperManager wm = WallpaperManager.getInstance(this);
+        Log.d(TAG, String.valueOf(wm.getDesiredMinimumWidth()));
+        Log.d(TAG, String.valueOf(wm.getDesiredMinimumHeight()));
     }
 
     @Override
@@ -137,6 +143,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     /**
      * テキストファイルから文字列を抽出する
+     *
      * @param id テキストファイルのID
      * @return テキストファイルの内容
      */
@@ -164,6 +171,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     /**
      * ギャラリーで選択した画像から縮小したBitmap画像を作成する
+     *
      * @param uri ギャラリーインテントから取得したURI
      * @return bmp Bitmap画像
      */
@@ -231,7 +239,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         int bmpWidth = bmp.getWidth();
         int bmpHeight = bmp.getHeight();
         // 縮小したいサイズ/画像サイズ = 縮小率
-        float scale = Math.min((float)SCALE_WIDTH/bmpWidth, (float)SCALE_HEIGHT/bmpHeight);
+        float scale = Math.min((float)SCALE_WIDTH / bmpWidth, (float)SCALE_HEIGHT / bmpHeight);
 
         Matrix matrix = new Matrix();
         // 画像の表示角度を変更
@@ -252,6 +260,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     /**
      * 画像ファイルのEXIF情報から角度を取得する
+     *
      * @param path 画像ファイルのパス
      * @return angle 角度（0, 90, 180, 270）
      */

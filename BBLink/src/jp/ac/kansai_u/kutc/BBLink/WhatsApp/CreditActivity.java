@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 /**
  * クレジット画面
+ *
  * @author akasaka
  */
 public class CreditActivity extends Activity{

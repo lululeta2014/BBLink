@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 
 /**
  * 設定画面
+ *
  * @author akasaka
- * Created by akasaka on 2014/07/11.
+ *         Created by akasaka on 2014/07/11.
  */
 public class PrefsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
     @Override

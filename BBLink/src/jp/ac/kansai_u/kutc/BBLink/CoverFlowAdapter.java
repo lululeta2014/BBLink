@@ -9,9 +9,10 @@ import at.technikum.mti.fancycoverflow.FancyCoverFlowAdapter;
 
 /**
  * カバーフローに適用するアダプター
+ *
  * @author yukihiro akasaka
  */
-public class CoverFlowAdapter extends FancyCoverFlowAdapter {
+public class CoverFlowAdapter extends FancyCoverFlowAdapter{
     private int[] images;
     private CustomViewGroup[] imageViews;
     private Bitmap[] bmpArray;
@@ -27,36 +28,37 @@ public class CoverFlowAdapter extends FancyCoverFlowAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getCount(){
         return images.length;
     }
 
     @Override
-    public Integer getItem(int i) {
+    public Integer getItem(int i){
         return images[i];
     }
 
     /**
      * Bitmap 画像を保存する
-     * @param i Bitmap 画像を保存するインデックス番号
+     *
+     * @param i   Bitmap 画像を保存するインデックス番号
      * @param bmp 保存する Bitmap 画像
      */
-    public void setBitmap(int i, Bitmap bmp) {
+    public void setBitmap(int i, Bitmap bmp){
         bmpArray[i] = bmp;
     }
 
     @Override
-    public long getItemId(int i) {
+    public long getItemId(int i){
         return i;
     }
 
     @Override
-    public View getCoverFlowItem(int i, View reuseableView, ViewGroup viewGroup) {
+    public View getCoverFlowItem(int i, View reuseableView, ViewGroup viewGroup){
         imageViews[i] = null;
 
-        if (reuseableView != null) { // 一度作成した View が存在するかどうか，という意味かな？
-            imageViews[i] = (CustomViewGroup) reuseableView;
-        } else {
+        if(reuseableView != null){ // 一度作成した View が存在するかどうか，という意味かな？
+            imageViews[i] = (CustomViewGroup)reuseableView;
+        }else{
             imageViews[i] = new CustomViewGroup(viewGroup.getContext());
             imageViews[i].setLayoutParams(new FancyCoverFlow.LayoutParams(300, 700));
         }
@@ -68,8 +70,9 @@ public class CoverFlowAdapter extends FancyCoverFlowAdapter {
 
     /**
      * Bitmap画像の配列をパラメータのものとスワップする
+     *
      * @param imgs スワップする各画像
-     * Ref: http://stackoverflow.com/questions/14503006/android-listview-not-refreshing-after-notifydatasetchanged
+     *             Ref: http://stackoverflow.com/questions/14503006/android-listview-not-refreshing-after-notifydatasetchanged
      */
     public void swapImages(Bitmap[] imgs){
         this.bmpArray = imgs;

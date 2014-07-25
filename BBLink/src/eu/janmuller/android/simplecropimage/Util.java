@@ -26,13 +26,14 @@ import java.io.Closeable;
 
 /**
  * Collection of utility functions used in this package.
+ *
  * @author Jan Muller(https://github.com/biokys/cropimage)
  */
-public class Util {
+public class Util{
 
     private static final String TAG = "db.Util";
 
-    private Util() {
+    private Util(){
 
     }
 
@@ -55,11 +56,11 @@ public class Util {
                                    Bitmap source,
                                    int targetWidth,
                                    int targetHeight,
-                                   boolean scaleUp) {
+                                   boolean scaleUp){
 
         int deltaX = source.getWidth() - targetWidth;
         int deltaY = source.getHeight() - targetHeight;
-        if (!scaleUp && (deltaX < 0 || deltaY < 0)) {
+        if(!scaleUp && (deltaX < 0 || deltaY < 0)){
             /*
              * In this case the bitmap is smaller, at least in one dimension,
              * than the target.  Transform it by placing as much of the image
@@ -93,28 +94,28 @@ public class Util {
         float bitmapAspect = bitmapWidthF / bitmapHeightF;
         float viewAspect = (float) targetWidth / targetHeight;
 
-        if (bitmapAspect > viewAspect) {
+        if(bitmapAspect > viewAspect){
             float scale = targetHeight / bitmapHeightF;
-            if (scale < .9F || scale > 1F) {
+            if(scale < .9F || scale > 1F){
                 scaler.setScale(scale, scale);
-            } else {
+            }else{
                 scaler = null;
             }
-        } else {
+        }else{
             float scale = targetWidth / bitmapWidthF;
-            if (scale < .9F || scale > 1F) {
+            if(scale < .9F || scale > 1F){
                 scaler.setScale(scale, scale);
-            } else {
+            }else{
                 scaler = null;
             }
         }
 
         Bitmap b1;
-        if (scaler != null) {
+        if(scaler != null){
             // this is used for minithumb and crop, so we want to mFilter here.
             b1 = Bitmap.createBitmap(source, 0, 0,
                     source.getWidth(), source.getHeight(), scaler, true);
-        } else {
+        }else{
             b1 = source;
         }
 
@@ -128,40 +129,40 @@ public class Util {
                 targetWidth,
                 targetHeight);
 
-        if (b1 != source) {
+        if(b1 != source){
             b1.recycle();
         }
 
         return b2;
     }
 
-    public static void closeSilently(Closeable c) {
+    public static void closeSilently(Closeable c){
 
-        if (c == null) return;
-        try {
+        if(c == null) return;
+        try{
             c.close();
-        } catch (Throwable t) {
+        }catch(Throwable t){
             // do nothing
         }
     }
 
     private static class BackgroundJob
-            extends MonitoredActivity.LifeCycleAdapter implements Runnable {
+            extends MonitoredActivity.LifeCycleAdapter implements Runnable{
 
         private final MonitoredActivity mActivity;
-        private final ProgressDialog    mDialog;
-        private final Runnable          mJob;
-        private final Handler           mHandler;
-        private final Runnable mCleanupRunner = new Runnable() {
-            public void run() {
+        private final ProgressDialog mDialog;
+        private final Runnable mJob;
+        private final Handler mHandler;
+        private final Runnable mCleanupRunner = new Runnable(){
+            public void run(){
 
                 mActivity.removeLifeCycleListener(BackgroundJob.this);
-                if (mDialog.getWindow() != null) mDialog.dismiss();
+                if(mDialog.getWindow() != null) mDialog.dismiss();
             }
         };
 
         public BackgroundJob(MonitoredActivity activity, Runnable job,
-                             ProgressDialog dialog, Handler handler) {
+                             ProgressDialog dialog, Handler handler){
 
             mActivity = activity;
             mDialog = dialog;
@@ -170,18 +171,18 @@ public class Util {
             mHandler = handler;
         }
 
-        public void run() {
+        public void run(){
 
-            try {
+            try{
                 mJob.run();
-            } finally {
+            }finally{
                 mHandler.post(mCleanupRunner);
             }
         }
 
 
         @Override
-        public void onActivityDestroyed(MonitoredActivity activity) {
+        public void onActivityDestroyed(MonitoredActivity activity){
             // We get here only when the onDestroyed being called before
             // the mCleanupRunner. So, run it now and remove it from the queue
             mCleanupRunner.run();
@@ -189,20 +190,20 @@ public class Util {
         }
 
         @Override
-        public void onActivityStopped(MonitoredActivity activity) {
+        public void onActivityStopped(MonitoredActivity activity){
 
             mDialog.hide();
         }
 
         @Override
-        public void onActivityStarted(MonitoredActivity activity) {
+        public void onActivityStarted(MonitoredActivity activity){
 
             mDialog.show();
         }
     }
 
     public static void startBackgroundJob(MonitoredActivity activity,
-                                          String title, String message, Runnable job, Handler handler) {
+                                          String title, String message, Runnable job, Handler handler){
         // Make the progress dialog uncancelable, so that we can gurantee
         // the thread will be done before the activity getting destroyed.
         ProgressDialog dialog = ProgressDialog.show(
@@ -212,7 +213,7 @@ public class Util {
 
 
     // Returns Options that set the puregeable flag for Bitmap decode.
-    public static BitmapFactory.Options createNativeAllocOptions() {
+    public static BitmapFactory.Options createNativeAllocOptions(){
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         //options.inNativeAlloc = true;
@@ -220,7 +221,7 @@ public class Util {
     }
 
     // Thong added for rotate
-    public static Bitmap rotateImage(Bitmap src, float degree) {
+    public static Bitmap rotateImage(Bitmap src, float degree){
         // create new matrix
         Matrix matrix = new Matrix();
         // setup rotation degree
@@ -229,13 +230,13 @@ public class Util {
         return bmp;
     }
 
-    public static int getOrientationInDegree(Activity activity) {
+    public static int getOrientationInDegree(Activity activity){
 
         int rotation = activity.getWindowManager().getDefaultDisplay()
                 .getRotation();
         int degrees = 0;
 
-        switch (rotation) {
+        switch(rotation){
             case Surface.ROTATION_0:
                 degrees = 0;
                 break;
