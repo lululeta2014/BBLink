@@ -40,13 +40,13 @@ public class WallPaperService extends Service{
     }
 
     @Override
-    public void onStart(Intent intent, int startId){
-        super.onStart(intent, startId);
+    public int onStartCommand(Intent intent, int flags, int startId){
         Toast.makeText(this, "Start Service", Toast.LENGTH_SHORT).show();
         wallpaperManager = WallpaperManager.getInstance(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_BATTERY_CHANGED);  //バッテリ残量のチェンジに応答
         registerReceiver(batteryReceiver, filter);  // ブロードキャストレシーバに登録
+        return START_STICKY;  // サービスの強制終了後，システムにより再起動
     }
 
     @Override
