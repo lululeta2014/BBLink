@@ -62,7 +62,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         this.fancyCoverFlow.setUnselectedScale(0.5f); //縮小
         this.fancyCoverFlow.setSpacing(50); //距離
         this.fancyCoverFlow.setMaxRotation(0); //回転角度
-        this.fancyCoverFlow.setScaleDownGravity(0.5f); //数値を上げるほど，未選択の画像が下に下がってくる
+        this.fancyCoverFlow.setScaleDownGravity(FancyCoverFlow.SCALEDOWN_GRAVITY_CENTER);  //未選択の画像の位置
         this.fancyCoverFlow.setActionDistance(FancyCoverFlow.ACTION_DISTANCE_AUTO); // わからない
     }
 
